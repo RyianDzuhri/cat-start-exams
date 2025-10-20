@@ -21,7 +21,7 @@ def generate_token(length=8):
 # -----------------------------
 # Endpoint pengawas: generate token session
 # -----------------------------
-@app.route("/api/admin/create_session", methods=["POST"])
+@app.route("/api/pengawas/create_session", methods=["POST"])
 def create_session():
     data = request.json
     exam_id = data.get("exam_id")
@@ -29,7 +29,7 @@ def create_session():
         return jsonify({"error": "exam_id wajib diisi"}), 400
 
     start_time = datetime.now()
-    end_time = start_time + timedelta(minutes=30)  # token berlaku 30 menit
+    end_time = start_time + timedelta(minutes=30)
     token = generate_token()
 
     db.sessions.insert_one({
@@ -44,7 +44,7 @@ def create_session():
         "token": token,
         "exam_id": exam_id,
         "valid_until": end_time.isoformat(),
-        "message": "Session created, token berlaku 30 menit"
+        "message": "Session created"
     }), 200
 
 # -----------------------------

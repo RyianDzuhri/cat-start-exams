@@ -13,7 +13,7 @@ export async function joinExam(userId, token) {
 
 // Pengawas generate token
 export async function createSession(examId) {
-  const res = await fetch(`${BASE_URL}/admin/create_session`, {
+  const res = await fetch(`${BASE_URL}/pengawas/create_session`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ exam_id: examId })
