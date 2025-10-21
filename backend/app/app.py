@@ -26,7 +26,7 @@ def create_session():
     data = request.json
     exam_id = data.get("exam_id")
     if not exam_id:
-        return jsonify({"error": "exam_id wajib diisi"}), 400
+        return jsonify({"error": "Exam ID wajib diisi"}), 400
 
     start_time = datetime.now()
     end_time = start_time + timedelta(minutes=30)
@@ -57,12 +57,12 @@ def join_exam():
     user_id = data.get("user_id")
 
     if not token or not user_id:
-        return jsonify({"error": "token dan user_id wajib diisi"}), 400
+        return jsonify({"error": "Token dan User ID wajib diisi"}), 400
 
     # Cari session berdasarkan token
     session = db.sessions.find_one({"_id": token})
     if not session:
-        return jsonify({"error": "Token invalid atau expired"}), 400
+        return jsonify({"error": "Token invalid"}), 400
 
     now = datetime.now()
     start_time = datetime.fromisoformat(session["start_time"])
@@ -79,7 +79,7 @@ def join_exam():
     if not participant:
         return jsonify({"error": "Participant not found"}), 400
 
-    # Update exam_id di participant agar sesuai dengan exam_id session
+    # Update exam_id di participant agar sesuai dengan exam_id session yang di ambil
     db.participants.update_one(
         {"_id": user_id},
         {"$set": {"exam_id": session["exam_id"]}}
