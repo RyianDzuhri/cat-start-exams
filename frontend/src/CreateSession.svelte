@@ -5,18 +5,15 @@
   let message = "";
 
   async function handleCreate() {
-    if (!examId) {
-      alert("Exam ID wajib diisi!");
-      return;
-    }
-    try {
-      const data = await createSession(examId);
-      token = data.token;
-      message = data.message;
-    } catch (err) {
-      alert(err.message);
-    }
+  try {
+    const data = await createSession(examId);
+    token = data.token;
+    message = data.message;
+  } catch (err) {
+    alert(err.message);
   }
+}
+
 </script>
 
 <main>
@@ -39,7 +36,13 @@
 </main>
 
 <style>
-  main { padding: 2rem; font-family: sans-serif; max-width: 400px; }
-  input { width: 100%; padding: 0.5rem; margin-top: 0.3rem; }
-  button { margin-top: 1rem; padding: 0.5rem 1rem; cursor: pointer; }
+  main { 
+    padding: 2rem; font-family: sans-serif; max-width: 400px;
+  }
+  input { 
+    width: 100%; padding: 0.5rem; margin-top: 0.3rem; 
+  }
+  button { 
+    margin-top: 1rem; padding: 0.5rem 1rem; cursor: pointer; 
+    }
 </style>

@@ -7,7 +7,7 @@
   let questions = [];
   let message = "";
   let selectedAnswers = {};
-  let timeLeft = 30 * 60; // 30 menit (dalam detik)
+  let timeLeft = 30 * 60;
   let timer;
 
   async function handleJoin() {
@@ -18,7 +18,7 @@
       examStarted = true;
       startTimer();
     } catch (err) {
-      alert(err.message);
+      alert(err.message); 
     }
   }
 

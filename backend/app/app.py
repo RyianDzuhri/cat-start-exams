@@ -13,7 +13,7 @@ client = MongoClient(os.getenv("MONGO_URI"))
 db = client.spmb_cat
 
 # -----------------------------
-# Helper: generate token
+# Helper: untuk generate token
 # -----------------------------
 def generate_token(length=8):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
@@ -59,6 +59,7 @@ def join_exam():
     if not token or not user_id:
         return jsonify({"error": "token dan user_id wajib diisi"}), 400
 
+    # Cari session berdasarkan token
     session = db.sessions.find_one({"_id": token})
     if not session:
         return jsonify({"error": "Token invalid atau expired"}), 400
@@ -73,22 +74,29 @@ def join_exam():
     if user_id not in session.get("participants", []):
         db.sessions.update_one({"_id": token}, {"$push": {"participants": user_id}})
 
-    # Ambil participant
+    # Ambil data participant
     participant = db.participants.find_one({"_id": user_id})
     if not participant:
         return jsonify({"error": "Participant not found"}), 400
 
+    # Update exam_id di participant agar sesuai dengan exam_id session
+    db.participants.update_one(
+        {"_id": user_id},
+        {"$set": {"exam_id": session["exam_id"]}}
+    )
+
     # Dummy questions
     questions_list = [
-        {"text": "Soal dummy 1?", "options": {"a": "1","b":"2","c":"3","d":"4"}},
-        {"text": "Soal dummy 2?", "options": {"a": "A","b":"B","c":"C","d":"D"}}
+        {"text": "Apakah a adalah B dan B adalah c?", "options": {"a": "1","b":"2","c":"3","d":"4"}},
+        {"text": "Siapakah Pencipta A?", "options": {"a": "A","b":"B","c":"C","d":"D"}}
     ]
 
     return jsonify({
         "exam_id": session["exam_id"],
         "questions": questions_list,
-        "message": f"{participant['name']} joined exam"
+        "message": f"{participant['name']} joined exam for {session['exam_id']}"
     }), 200
+
 
 # -----------------------------
 # Jalankan server
